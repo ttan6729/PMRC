@@ -17,7 +17,7 @@ Options:
 	-t 		number of threads, default: 12
 	-k 		length of k-mer, k <= 10, default: 8
 	-e 		threshold percentage, default: 2
-Decompression - decompresses reads. Output written to 'dec' folder
+Decompression - decompresses reads. Output written to '*_decompress' folder
 ./PMRC.sh -d -r file.PMRC
 EOF
 #./minicom -d file.minicom
