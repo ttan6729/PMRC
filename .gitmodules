@@ -1,0 +1,6 @@
+[submodule "PgRC"]
+	path = PgRC
+	url = https://github.com/kowallus/PgRC
+[submodule "minicom"]
+	path = minicom
+	url = https://github.com/yuansliu/minicom
