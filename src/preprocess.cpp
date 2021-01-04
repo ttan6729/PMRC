@@ -189,7 +189,8 @@ void process_file(const char *file_name, int length,reads_t t)
 	int n_seq = 0;
 	c_seq *seqs = seq_init(fp,&n_seq,&length);
 
-//	info_fp << strip_slash(file_name) << " " << n_seq << "\n";
+	printf("%s, read number: %d\n",strip_slash(file_name),n_seq);
+	info_fp << strip_slash(file_name) << " " << n_seq << "\n";
 	t.seqs = seqs;
 	t.n = n_seq;
 	n_nreads = 0;
@@ -239,15 +240,16 @@ float **pre_process(vector<string> file_list, char *dir, int _k, int selected_nu
 
 	char info_name[1024];
 	sprintf(info_name,"%s/info",dir);
+	printf("write information to %s\n",info_name);
 	info_fp.open(info_name,std::fstream::in | std::fstream::out | std::fstream::app);
-	for(int i = 0; i < file_list.size(); i++)
-		info_fp << strip_slash(file_list[i].c_str()) << "\n";
-	info_fp.close();
+	//for(int i = 0; i < file_list.size(); i++)
+	//	info_fp << strip_slash(file_list[i].c_str()) << "\n";
+	//info_fp.close();
 	
 	t.n_threads = n_threads;//n_threads;
 	t.w = (reads_worker_t*)alloca(n_threads * sizeof(reads_worker_t));
 
-    num_bucket = 1<<b;
+        num_bucket = 1<<b;
 	
 	mi_data = (int**)malloc(sizeof(int *) * file_list.size());
 	for(int i = 0; i < file_list.size(); i++)
@@ -372,6 +374,6 @@ float **pre_process(vector<string> file_list, char *dir, int _k, int selected_nu
 		data_fp.close();
 	}
 
-
+	info_fp.close();
 	return dist_matrix->data;
 }

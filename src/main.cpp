@@ -60,8 +60,8 @@ int main (int argc, char **argv)
       	matrix_fp = optarg;
       	break;      	
     }
-  //  char output_name[1024];
-  //  sprintf(output_name,"%s/cluster",output_fp);
+    char output_name[1024];
+    sprintf(output_name,"%s/cluster",output_fp);
     if( if_read )
     {
     	float **dist_matrix = ReadMatrix(file_list_path);
@@ -77,7 +77,7 @@ int main (int argc, char **argv)
     	float **dist_matrix = process(output_fp,_k,matrix_fp); 
     	Trail *trail = new Trail(file_list.size(),dist_matrix);
     	trail->Run();
-    	trail->WriteResult(output_fp);
+    	trail->WriteResult(output_name);
     }
 	return 0;
 }

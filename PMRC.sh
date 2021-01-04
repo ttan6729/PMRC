@@ -9,23 +9,25 @@ MRC is a clsutering-bsaed tool for selecting high-simialrity groups from multipl
 
 Usage: 
 Compression - compresses FASTQ datasets. Output written to '*.PMRC' file
-./PMRC.sh -a m -r list1.txt (compress with minicom, file contain name of to be compressed files)
-./PMRC.sh -a p -r file.txt (compress with PgRc, file contain name of to be compressed files)
-./PMRC.sh -d file.MRC
+./PMRC.sh -a m -r test.txt (compress with minicom, file contain name of to be compressed files)
+./PMRC.sh -a p -r test.txt (compress with PgRc, file contain name of to be compressed files)
 Options:
-	-r      	compression mode
+	-r      	source file, file list for compression and compressed file for decomrpession
 	-h 		print help message
 	-t 		number of threads, default: 12
 	-k 		length of k-mer, k <= 10, default: 8
 	-e 		threshold percentage, default: 2
 Decompression - decompresses reads. Output written to 'dec' folder
-./minicom -d file.minicom 
-	-d 		a compressed file .MRC [only for decompression]
- 	-t 		number of threads, default: 24
-#See README and more supplementary information at:
+./PMRC.sh -d -r file.PMRC
 EOF
+#./minicom -d file.minicom
+#       -d              a compressed file .MRC [only for decompression]
+#       -t              number of threads, default: 24
+#See README and more supplementary information at:
+
 # exit 0
 }
+
 
 compress()
 {
@@ -36,7 +38,7 @@ compress()
 	echo ${alg} > ${output}/info
 
 	echo "./PMRC -r ${filename} -o ${output}/cluster"
-	./PMRC -r ${filename} -o ${output}/cluster -t ${num_thr} -k ${k} -e ${threshold_per} #-o ${output}
+	./PMRC -r ${filename} -o ${output} -t ${num_thr} -k ${k} -e ${threshold_per} #-o ${output}
 
 	listVar=( )
 	while read a b
@@ -59,7 +61,7 @@ compress()
         	mv ${output}/buff.fastq ${output}/${fp}.fastq            	
 
             if [[ $alg = "p" ]]; then
-            	./PgRC -o -i ${output}/${fp}.fastq ${output}/${fp}.pgrc
+            	./PgRC -o -i ${output}/${fp}.fastq -o ${output}/${fp}.pgrc
             elif [[ $alg = "m" ]]; then
             	cd minicom 
             	./minicom -r ../${output}/${fp}.fastq -p
@@ -121,6 +123,7 @@ decompress()
 		done
 
         if [[ $alg = "p" ]]; then
+		echo "./PgRC -d ${dir}/${fp}.pgrc"
         	./PgRC -d ${dir}/${fp}.pgrc
         	start=1
         	end=0
