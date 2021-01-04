@@ -1,0 +1,6 @@
+tests/test1.fastq
+tests/test2.fastq
+tests/test3.fastq
+tests/test4.fastq
+tests/test5.fastq
+tests/test6.fastq

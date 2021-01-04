@@ -8,12 +8,12 @@ cat << EOF
 MRC is a clsutering-bsaed tool for selecting high-simialrity groups from multiple FASTQ datasets, then apply minicom/PgRC for compression.
 
 Usage: 
-Compression - compresses FASTQ datasets. Output written to '*.MRC' file
-./MRC.sh -a m -r list1.txt (compress with minicom, file contain name of to be compressed files)
-./MRC.sh -a p -r file.txt (compress with PgRc, file contain name of to be compressed files)
-./MRC.sh -d file.MRC
+Compression - compresses FASTQ datasets. Output written to '*.PMRC' file
+./PMRC.sh -a m -r list1.txt (compress with minicom, file contain name of to be compressed files)
+./PMRC.sh -a p -r file.txt (compress with PgRc, file contain name of to be compressed files)
+./PMRC.sh -d file.MRC
 Options:
-	-r      compression mode
+	-r      	compression mode
 	-h 		print help message
 	-t 		number of threads, default: 12
 	-k 		length of k-mer, k <= 10, default: 8
@@ -36,7 +36,7 @@ compress()
 	echo ${alg} > ${output}/info
 
 	echo "./PMRC -r ${filename} -o ${output}/cluster"
-	./PMRC -r ${filename} -o ${output}/cluster #-t ${num_thr} -k ${k} -e ${threshold_per} -o ${output}
+	./PMRC -r ${filename} -o ${output}/cluster -t ${num_thr} -k ${k} -e ${threshold_per} #-o ${output}
 
 	listVar=( )
 	while read a b
@@ -64,17 +64,17 @@ compress()
             	cd minicom 
             	./minicom -r ../${output}/${fp}.fastq -p
             	cd ../
-            elif [[ $alg = "s" ]]; then
-                        ./spring -c -i ${output}/${fp}.fastq -o ${output}/${fp}.spring
-            elif [[ $alg = "s2" ]]; then
-                        ./spring -c -i ${output}/${fp}.fastq --no-quality --no-ids -o ${output}/${fp}.spring
-            elif [[ $alg = "f" ]]; then
-                    echo ${fp}.fastq
-                    _cwd="$PWD"
-                    cd FaStore
-                    sh ./fastore_compress.sh --lossless --in ../${output}/${fp}.fastq --out ../$
-                    cd ../
-       		fi
+            #elif [[ $alg = "s" ]]; then
+            #            ./spring -c -i ${output}/${fp}.fastq -o ${output}/${fp}.spring
+            #elif [[ $alg = "s2" ]]; then
+            #            ./spring -c -i ${output}/${fp}.fastq --no-quality --no-ids -o ${output}/${fp}.spring
+            #elif [[ $alg = "f" ]]; then
+            #        echo ${fp}.fastq
+            #        _cwd="$PWD"
+            #        cd FaStore
+            #        sh ./fastore_compress.sh --lossless --in ../${output}/${fp}.fastq --out ../$
+            #        cd ../
+       	    fi
 			rm -rf ${output}/${fp}.fastq
 	done < "${output}/cluster"
 	tar -cf ${filename%.*}_${alg}${mark}.PMRC ${output}
@@ -136,14 +136,14 @@ decompress()
         	cd minicom 
         	./minicom -r ../${dir}/${fp}.fastq -p
         	cd ../
-        elif [[ $alg = "s" ]]; then
-        	fp="${fp}.spring"
-        	output=""
-        	for element in "${array[@]}"
-			do
-		    	output="${output} ${file_list[$element]}"
-			done
-        	./spring -d -i ${fp} -o ${output}
+        #elif [[ $alg = "s" ]]; then
+        #	fp="${fp}.spring"
+        #	output=""
+        #	for element in "${array[@]}"
+	#		do
+	#	    	output="${output} ${file_list[$element]}"
+	#		done
+        #	./spring -d -i ${fp} -o ${output}
 		fi		
 	done < "${dir}/cluster"
 	#rm -rf $dir
